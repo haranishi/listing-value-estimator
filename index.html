@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>PriceScope | 出品価格チェッカー</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="app">
+      <header class="topbar">
+        <div class="brand">
+          <span class="brand-mark" aria-hidden="true">P</span>
+          <div>
+            <strong>PriceScope</strong>
+            <span>Listing Value Estimator</span>
+          </div>
+        </div>
+        <div class="top-actions">
+          <button class="ghost-button" id="sample-button" type="button">サンプル</button>
+          <button class="primary-button" id="copy-summary" type="button">結果コピー</button>
+        </div>
+      </header>
+
+      <main class="workspace">
+        <section class="surface input-panel">
+          <div class="section-title">
+            <p>Item Data</p>
+            <h1>出品情報</h1>
+          </div>
+
+          <form id="value-form" class="value-form">
+            <label class="wide">
+              商品名
+              <input name="name" type="text" value="Apple Watch Series 8 GPS 45mm" required />
+            </label>
+
+            <label>
+              カテゴリ
+              <select name="category">
+                <option value="electronics">家電・ガジェット</option>
+                <option value="fashion">ファッション</option>
+                <option value="luxury">ブランド品</option>
+                <option value="hobby">ホビー・コレクション</option>
+                <option value="furniture">家具・インテリア</option>
+                <option value="sports">スポーツ用品</option>
+                <option value="baby">ベビー用品</option>
+                <option value="books">本・メディア</option>
+              </select>
+            </label>
+
+            <label>
+              ブランド力
+              <select name="brandTier">
+                <option value="premium">人気ブランド</option>
+                <option value="standard" selected>一般ブランド</option>
+                <option value="niche">ニッチ・無名</option>
+              </select>
+            </label>
+
+            <label>
+              購入価格
+              <input name="originalPrice" type="number" min="0" step="100" value="64800" required />
+            </label>
+
+            <label>
+              経過年数
+              <input name="ageYears" type="number" min="0" max="50" step="0.5" value="2" required />
+            </label>
+
+            <label>
+              状態
+              <select name="condition">
+                <option value="new">新品・未使用</option>
+                <option value="likeNew">未使用に近い</option>
+                <option value="good" selected>目立った傷なし</option>
+                <option value="fair">やや傷や汚れあり</option>
+                <option value="poor">傷や汚れあり</option>
+              </select>
+            </label>
+
+            <label>
+              付属品
+              <select name="accessories">
+                <option value="complete">箱・説明書・付属品完備</option>
+                <option value="partial" selected>一部あり</option>
+                <option value="none">本体のみ</option>
+              </select>
+            </label>
+
+            <label>
+              需要感
+              <select name="demand">
+                <option value="hot">高い</option>
+                <option value="normal" selected>普通</option>
+                <option value="low">低い</option>
+              </select>
+            </label>
+
+            <label>
+              限定性
+              <select name="rarity">
+                <option value="limited">限定・廃盤・希少</option>
+                <option value="normal" selected>通常品</option>
+                <option value="common">流通量が多い</option>
+              </select>
+            </label>
+
+            <label>
+              売りたい速さ
+              <select name="speed">
+                <option value="fast">早く売りたい</option>
+                <option value="normal" selected>通常</option>
+                <option value="patient">高めでも待てる</option>
+              </select>
+            </label>
+
+            <label>
+              季節性
+              <select name="seasonality">
+                <option value="peak">今が売れ時</option>
+                <option value="neutral" selected>普通</option>
+                <option value="off">時期外れ</option>
+              </select>
+            </label>
+
+            <fieldset class="wide checklist">
+              <legend>見た目・信頼要素</legend>
+              <label><input name="trust" type="checkbox" value="cleaned" checked />清掃済み</label>
+              <label><input name="trust" type="checkbox" value="tested" checked />動作確認済み</label>
+              <label><input name="trust" type="checkbox" value="photos" />写真10枚以上</label>
+              <label><input name="trust" type="checkbox" value="receipt" />購入証明あり</label>
+              <label><input name="trust" type="checkbox" value="defects" />傷の写真あり</label>
+            </fieldset>
+
+            <label class="wide">
+              補足メモ
+              <textarea name="notes" rows="4" placeholder="例: バッテリー最大容量92%、画面に細かい擦れあり"></textarea>
+            </label>
+          </form>
+        </section>
+
+        <section class="surface result-panel">
+          <div class="section-title result-head">
+            <div>
+              <p>Estimated Value</p>
+              <h2>査定結果</h2>
+            </div>
+            <span class="confidence" id="confidence">--</span>
+          </div>
+
+          <div class="price-hero">
+            <span>推奨出品価格</span>
+            <strong id="recommended-price">--</strong>
+            <div class="range-track" aria-hidden="true">
+              <span id="range-fill"></span>
+            </div>
+            <p id="range-text">入力すると価格レンジを表示します</p>
+          </div>
+
+          <div class="price-grid">
+            <div>
+              <span>早売り</span>
+              <strong id="quick-price">--</strong>
+            </div>
+            <div>
+              <span>相場中心</span>
+              <strong id="market-price">--</strong>
+            </div>
+            <div>
+              <span>強気</span>
+              <strong id="premium-price">--</strong>
+            </div>
+          </div>
+
+          <div class="score-card">
+            <div class="score-ring" id="score-ring">
+              <strong id="value-score">--</strong>
+              <span>score</span>
+            </div>
+            <div>
+              <h3 id="score-title">査定待ち</h3>
+              <p id="score-summary">商品情報を入力すると、売れやすさと価格の妥当性を判定します。</p>
+            </div>
+          </div>
+
+          <div class="factor-list" id="factor-list"></div>
+        </section>
+
+        <aside class="side-panel">
+          <section class="surface">
+            <div class="section-title">
+              <p>Improve</p>
+              <h2>売値を上げる改善</h2>
+            </div>
+            <div class="todo-list" id="todo-list"></div>
+          </section>
+
+          <section class="surface">
+            <div class="section-title">
+              <p>Copy</p>
+              <h2>出品コピー</h2>
+            </div>
+            <label class="copy-box">
+              タイトル
+              <textarea id="listing-title" rows="3" readonly></textarea>
+            </label>
+            <label class="copy-box">
+              説明文
+              <textarea id="listing-description" rows="8" readonly></textarea>
+            </label>
+          </section>
+        </aside>
+      </main>
+    </div>
+
+    <div class="toast" id="toast" role="status" aria-live="polite">コピーしました</div>
+
+    <script src="app.js"></script>
+  </body>
+</html>
